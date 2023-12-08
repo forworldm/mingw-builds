@@ -35,11 +35,11 @@
 
 # **************************************************************************
 
-readonly HOST_MINGW_VERSION=7.2.0
-readonly HOST_MINGW_RT_VERSION=5
-readonly HOST_MINGW_BUILD_REV=1
-readonly i686_HOST_MINGW_PATH_URL="https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/$HOST_MINGW_VERSION/threads-posix/{exceptions}/i686-$HOST_MINGW_VERSION-release-posix-{exceptions}-rt_v$HOST_MINGW_RT_VERSION-rev$HOST_MINGW_BUILD_REV.7z"
-readonly x86_64_HOST_MINGW_PATH_URL="https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/$HOST_MINGW_VERSION/threads-posix/{exceptions}/x86_64-$HOST_MINGW_VERSION-release-posix-{exceptions}-rt_v$HOST_MINGW_RT_VERSION-rev$HOST_MINGW_BUILD_REV.7z"
+readonly HOST_MINGW_VERSION=8.5.0
+readonly HOST_MINGW_RT_VERSION=10
+readonly HOST_MINGW_BUILD_REV=0
+readonly i686_HOST_MINGW_PATH_URL="https://github.com/niXman/mingw-builds-binaries/releases/download/$HOST_MINGW_VERSION-rt_v$HOST_MINGW_RT_VERSION-rev$HOST_MINGW_BUILD_REV/i686-$HOST_MINGW_VERSION-release-posix-{exceptions}-rt_v$HOST_MINGW_RT_VERSION-rev$HOST_MINGW_BUILD_REV.7z"
+readonly x86_64_HOST_MINGW_PATH_URL="https://github.com/niXman/mingw-builds-binaries/releases/download/$HOST_MINGW_VERSION-rt_v$HOST_MINGW_RT_VERSION-rev$HOST_MINGW_BUILD_REV/x86_64-$HOST_MINGW_VERSION-release-posix-{exceptions}-rt_v$HOST_MINGW_RT_VERSION-rev$HOST_MINGW_BUILD_REV.7z"
 
 # **************************************************************************
 
@@ -101,24 +101,9 @@ function func_test_installed_packages {
 		dejagnu
 	)
 
-	local not_installed_packages=()
-
-	for it in ${required_packages[@]}; do
-		$(pacman -Qs ^$it > /dev/null 2>&1)
-		[[ $? != 0 ]] && {
-			not_installed_packages=(${not_installed_packages[@]} $it)
-		}
-	done
-
-	[[ ${#not_installed_packages[@]} != 0 ]] && {
-		local packages_str=$(printf ",%s" "${not_installed_packages[@]}")
-		packages_str=${packages_str:1}
-		echo ""
-		echo "the following packages are not installed: $packages_str"
-		echo "you can install it using command:"
-		echo "   pacman -S$(printf " %s" "${not_installed_packages[@]}")"
+	echo "--> installing required packages..."
+	pacman -Sy --noconfirm --needed$(printf " %s" "${required_packages[@]}") ||
 		return 1
-	}
 
 	return 0
 }

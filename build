@@ -338,6 +338,10 @@ while [[ $# > 0 ]]; do
 					RUNTIME_VERSION=v9.0.0
 					RUNTIME_BRANCH="release"
 				;;
+				v10.0.0)
+					RUNTIME_VERSION=v10.0.0
+					RUNTIME_BRANCH="release"
+				;;
 				*)
 					die "Unsupported runtime version $RUNTIME_VERSION."
 				;;
